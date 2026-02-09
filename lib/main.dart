@@ -26,17 +26,55 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
+
+  void getNext() {
+    current = WordPair.random();
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
+    var pair = appState.current;
 
     return Scaffold(
       body: Column(
-        children: [Text('A random idea:'), 
-        Text(appState.current.asLowerCase)],
+        children: [Text('A random AWOSOME idea:'), 
+        BigCard(pair: pair),
+        
+        ElevatedButton(
+            onPressed: () {
+              appState.getNext();
+              print("buttn pressed");
+            },
+            child: Text('Next'),
+          ),
+        
+        ],
+      ),
+    );
+  }
+}
+
+class BigCard extends StatelessWidget {
+  const BigCard({
+    super.key,
+    required this.pair,
+  });
+
+  final WordPair pair;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Card(
+      color: theme.colorScheme.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(pair.asLowerCase),
       ),
     );
   }
